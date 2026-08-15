@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Utils/FileReader.fs"></Compile>
+    <Compile Include="Solutions/Day01.fs"></Compile>
+    <Compile Include="Solutions/Day02.fs"></Compile>
+    <Compile Include="Solutions/Day03.fs"></Compile>
+    <Compile Include="Program.fs"></Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Inputs/*.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
