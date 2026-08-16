@@ -22,6 +22,12 @@ let main args =
         input |> Day03.solvePart02 |> printfn "Part 2: %A"
         0
 
+    | [| "day04" |] ->
+        let input = FileReader.readText 4
+        input |> Day04.solvePart01 |> printfn "Part 1: %A"
+        input |> Day04.solvePart02 |> printfn "Part 2: %A"
+        0
+
     | _ ->
         printfn "Usage: dotnet run -- day<number>"
         1
