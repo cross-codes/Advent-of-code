@@ -28,7 +28,7 @@ module Day04 =
         let rEnd = range[1] |> int
 
         let isValid (num: string) =
-            let padded = sprintf " %s " num
+            let padded = $" {num} "
             let pairs = Seq.pairwise num
 
             Seq.forall (fun (a, b) -> a <= b) pairs
