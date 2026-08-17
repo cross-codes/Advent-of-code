@@ -16,7 +16,7 @@ let day01 () =
 let day02 () =
     let input = FileReader.readText 2
     input |> Day02.solvePart01 |> printfn "Part 1: %A"
-    input |> Day02.solvePart02 19690720 |> printfn "Part 2: %A"
+    input |> Day02.solvePart02 |> printfn "Part 2: %A"
 
 let day03 () =
     let input = FileReader.readLines 3

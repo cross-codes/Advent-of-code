@@ -17,7 +17,7 @@ module Day02 =
         processor.Run()
 
 
-    let public solvePart02 targetOutput (input: string) =
+    let public solvePart02 (input: string) =
         let intCode = input.Split "," |> Array.map int
 
         let resPair =
@@ -29,7 +29,7 @@ module Day02 =
                 processor.RegisterHandler 99 haltHandler
                 processor.ModifyAt 1 i
                 processor.ModifyAt 2 j
-                processor.Run() = targetOutput)
+                processor.Run() = 19690720)
 
         match resPair with
         | Some(i, j) -> 100 * i + j
