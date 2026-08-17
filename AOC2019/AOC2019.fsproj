@@ -5,10 +5,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Utils/FileReader.fs"></Compile>
+    <Compile Include="Solutions/Shared/IntcodeComputer/ParameterMode.fs"></Compile>
+    <Compile Include="Solutions/Shared/IntcodeComputer/Instructions.fs"></Compile>
+    <Compile Include="Solutions/Shared/IntcodeComputer/Contexts.fs"></Compile>
+    <Compile Include="Solutions/Shared/IntcodeComputer/Handlers.fs"></Compile>
+    <Compile Include="Solutions/Shared/IntcodeComputer/Processor.fs"></Compile>
     <Compile Include="Solutions/Day01.fs"></Compile>
     <Compile Include="Solutions/Day02.fs"></Compile>
     <Compile Include="Solutions/Day03.fs"></Compile>
     <Compile Include="Solutions/Day04.fs"></Compile>
+    <Compile Include="Solutions/Day05.fs"></Compile>
     <Compile Include="Program.fs"></Compile>
   </ItemGroup>
   <ItemGroup>

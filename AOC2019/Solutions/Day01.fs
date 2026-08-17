@@ -3,7 +3,7 @@ namespace AOC2019.Solutions
 module Day01 =
     let private getFuelMass mass = mass / 3 - 2
 
-    let solvePart01 (input: string array) =
+    let public solvePart01 (input: string array) =
         input |> Array.sumBy (int >> getFuelMass)
 
     let private getModuleFuel mass =
@@ -13,5 +13,5 @@ module Day01 =
 
         loop 0 mass
 
-    let solvePart02 (input: string array) =
+    let public solvePart02 (input: string array) =
         input |> Array.sumBy (int >> getModuleFuel)

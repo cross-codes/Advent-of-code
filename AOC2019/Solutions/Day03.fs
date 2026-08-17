@@ -40,7 +40,7 @@ module Day03 =
         firstCoordinates.Remove(0, 0) |> ignore
         firstCoordinates
 
-    let solvePart01 (input: string array) =
+    let public solvePart01 (input: string array) =
         let firstMovements = input[0].Split ","
         let secondMovements = input[1].Split ","
         let intersectionPoints = getIntersectionPoints firstMovements secondMovements
@@ -70,7 +70,7 @@ module Day03 =
 
         distanceMap
 
-    let solvePart02 (input: string array) =
+    let public solvePart02 (input: string array) =
         let firstMovements = input[0].Split ","
         let firstDistanceMap = getDistanceMap firstMovements
 

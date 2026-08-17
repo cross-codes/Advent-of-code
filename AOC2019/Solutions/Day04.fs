@@ -1,7 +1,7 @@
 namespace AOC2019.Solutions
 
 module Day04 =
-    let solvePart01 (input: string) =
+    let public solvePart01 (input: string) =
         let range = input.Split "-"
         let rStart = range[0] |> int
         let rEnd = range[1] |> int
@@ -22,7 +22,7 @@ module Day04 =
 
         testRange rStart 0
 
-    let solvePart02 (input: string) =
+    let public solvePart02 (input: string) =
         let range = input.Split "-"
         let rStart = range[0] |> int
         let rEnd = range[1] |> int
