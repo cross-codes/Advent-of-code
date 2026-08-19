@@ -34,9 +34,10 @@ module Handlers =
         fun context _instruction ->
             let addr = context.Memory[context.Pointer + 1]
 
-            match context.FixedInput with
-            | Some e -> context.Memory[addr] <- e
-            | None -> context.Memory[addr] <- stdin.ReadLine() |> int
+            if context.InputQueue.Count = 0 then
+                failwith $"No input provided"
+            else
+                context.Memory[addr] <- context.InputQueue.Dequeue()
 
             context.Pointer <- context.Pointer + 2
             true
@@ -45,7 +46,7 @@ module Handlers =
         fun context instruction ->
             let p1 = context.Memory[context.Pointer + 1]
             let result = interpretParameter context instruction.Modes[0] p1
-            printfn $"[INTCODE CONSOLE]: {result}"
+            context.Outputs.Add result
             context.Pointer <- context.Pointer + 2
             true
 

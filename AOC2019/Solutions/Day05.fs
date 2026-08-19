@@ -1,5 +1,6 @@
 namespace AOC2019.Solutions
 
+open System.Collections.Generic
 open Shared.IntcodeComputer.Processor
 open Shared.IntcodeComputer.Handlers
 
@@ -13,7 +14,7 @@ module Day05 =
         processor.RegisterHandler 3 inputHandler
         processor.RegisterHandler 4 outputHandler
 
-        processor.Run 1
+        processor.Run(Queue [ 1 ])
 
     let solvePart02 (input: string) =
         let intCode = input.Split "," |> Array.map int
@@ -28,4 +29,4 @@ module Day05 =
         processor.RegisterHandler 7 lessThanHandler
         processor.RegisterHandler 8 equalToHandler
 
-        processor.Run 5
+        processor.Run(Queue [ 5 ])

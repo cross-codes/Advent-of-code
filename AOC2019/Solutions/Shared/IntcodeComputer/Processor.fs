@@ -3,6 +3,7 @@ namespace AOC2019.Solutions.Shared.IntcodeComputer
 open Instructions
 open Contexts
 open Handlers
+open System.Collections.Generic
 
 module Processor =
 
@@ -15,13 +16,12 @@ module Processor =
 
         member _.ModifyAt index value = memory.[index] <- value
 
-        member this.Run?fixedInput =
+        member this.Run(input: Queue<int>) : Result<(int list * int array), string> =
             let context =
                 { Memory = memory
                   Pointer = 0
-                  FixedInput = fixedInput }
-
-            let mutable error = false
+                  InputQueue = input
+                  Outputs = List<int>() }
 
             let rec executeNext () =
                 match decode memory[context.Pointer] with
@@ -29,16 +29,13 @@ module Processor =
                     match handlers.TryFind instruction.Opcode with
                     | Some handler ->
                         let continueInterpretation = handler context instruction
-
                         if continueInterpretation then
                             executeNext ()
+                        else
+                            Ok (context.Outputs |> List.ofSeq, context.Memory)
                     | None ->
-                        failwith $"No handler registered for opcode {instruction.Opcode} at pointer {context.Pointer}"
-                | None -> error <- true
+                        Error $"No handler registered for opcode {instruction.Opcode} at pointer {context.Pointer}"
+                | None ->
+                    Error $"Failed to decode opcode {memory[context.Pointer]} at pointer {context.Pointer}"
 
             executeNext ()
-
-            if not error then
-                context.Memory.[0]
-            else
-                System.Int32.MinValue

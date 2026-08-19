@@ -1,5 +1,6 @@
 namespace AOC2019.Solutions
 
+open System.Collections.Generic
 open Shared.IntcodeComputer.Handlers
 open Shared.IntcodeComputer.Processor
 
@@ -14,7 +15,7 @@ module Day02 =
         processor.ModifyAt 1 12
         processor.ModifyAt 2 2
 
-        processor.Run()
+        processor.Run(Queue<int>())
 
 
     let public solvePart02 (input: string) =
@@ -29,7 +30,9 @@ module Day02 =
                 processor.RegisterHandler 99 haltHandler
                 processor.ModifyAt 1 i
                 processor.ModifyAt 2 j
-                processor.Run() = 19690720)
+                match processor.Run(Queue<int>()) with
+                | Ok (_, memory) -> memory[0] =  19690720
+                | Error _ -> false)
 
         match resPair with
         | Some(i, j) -> 100 * i + j
