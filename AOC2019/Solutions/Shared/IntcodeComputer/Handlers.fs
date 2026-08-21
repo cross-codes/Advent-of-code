@@ -4,7 +4,12 @@ open Instructions
 open Contexts
 
 module Handlers =
-    type public Handler = Context -> Instruction -> bool // true to keep running, false else
+    type public HandlerResult =
+        | Continue
+        | OutputProduced
+        | Halted
+
+    type public Handler = Context -> Instruction -> HandlerResult // true to keep running, false else * true if output
 
     let public additionHandler: Handler =
         fun context instruction ->
@@ -15,7 +20,7 @@ module Handlers =
             let b = interpretParameter context instruction.Modes[1] p2
             context.Memory[addr] <- a + b
             context.Pointer <- context.Pointer + 4
-            true
+            Continue
 
     let public multiplyHandler: Handler =
         fun context instruction ->
@@ -26,9 +31,9 @@ module Handlers =
             let b = interpretParameter context instruction.Modes[1] p2
             context.Memory[addr] <- a * b
             context.Pointer <- context.Pointer + 4
-            true
+            Continue
 
-    let public haltHandler: Handler = fun _ctx _instr -> false
+    let public haltHandler: Handler = fun _ctx _instr -> Halted
 
     let public inputHandler: Handler =
         fun context _instruction ->
@@ -40,7 +45,7 @@ module Handlers =
                 context.Memory[addr] <- context.InputQueue.Dequeue()
 
             context.Pointer <- context.Pointer + 2
-            true
+            Continue
 
     let public outputHandler: Handler =
         fun context instruction ->
@@ -48,7 +53,7 @@ module Handlers =
             let result = interpretParameter context instruction.Modes[0] p1
             context.Outputs.Add result
             context.Pointer <- context.Pointer + 2
-            true
+            OutputProduced
 
     let public jumpIfTrueHandler: Handler =
         fun context instruction ->
@@ -62,7 +67,7 @@ module Handlers =
             else
                 context.Pointer <- context.Pointer + 3
 
-            true
+            Continue
 
     let public jumpIfFalseHandler: Handler =
         fun context instruction ->
@@ -76,7 +81,7 @@ module Handlers =
             else
                 context.Pointer <- context.Pointer + 3
 
-            true
+            Continue
 
     let public lessThanHandler: Handler =
         fun context instruction ->
@@ -92,7 +97,7 @@ module Handlers =
                 context.Memory[addr] <- 0
 
             context.Pointer <- context.Pointer + 4
-            true
+            Continue
 
     let public equalToHandler: Handler =
         fun context instruction ->
@@ -108,4 +113,4 @@ module Handlers =
                 context.Memory[addr] <- 0
 
             context.Pointer <- context.Pointer + 4
-            true
+            Continue

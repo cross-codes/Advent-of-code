@@ -7,6 +7,10 @@ open System.Collections.Generic
 
 module Processor =
 
+    type public ExecutionResult =
+        | Paused
+        | Terminated
+
     type public Processor(initialOpcodes: int array) =
         let memory = Array.copy initialOpcodes
         let mutable handlers: Map<int, Handler> = Map.empty
@@ -16,26 +20,36 @@ module Processor =
 
         member _.ModifyAt index value = memory.[index] <- value
 
-        member this.Run(input: Queue<int>) : Result<(int list * int array), string> =
+        member this.Execute(additionalInput: Queue<int>, ?existingContext: Context, ?pauseOnOutput: bool) =
             let context =
-                { Memory = memory
-                  Pointer = 0
-                  InputQueue = input
-                  Outputs = List<int>() }
+                match existingContext with
+                | Some ctx ->
+                    additionalInput |> Seq.iter ctx.InputQueue.Enqueue
+                    ctx
+                | None ->
+                    { Memory = memory
+                      Pointer = 0
+                      InputQueue = additionalInput
+                      Outputs = List<int>() }
+
+            let pauseOnOutput = defaultArg pauseOnOutput false
 
             let rec executeNext () =
                 match decode memory[context.Pointer] with
                 | Some instruction ->
                     match handlers.TryFind instruction.Opcode with
                     | Some handler ->
-                        let continueInterpretation = handler context instruction
-                        if continueInterpretation then
-                            executeNext ()
-                        else
-                            Ok (context.Outputs |> List.ofSeq, context.Memory)
+                        let instructionAftermath = handler context instruction
+
+                        match instructionAftermath with
+                        | Continue -> executeNext ()
+                        | OutputProduced when pauseOnOutput ->
+                            Ok(context.Outputs |> List.ofSeq, context.Memory, context, Paused)
+                        | OutputProduced -> executeNext ()
+                        | Halted -> Ok(context.Outputs |> List.ofSeq, context.Memory, context, Terminated)
+
                     | None ->
                         Error $"No handler registered for opcode {instruction.Opcode} at pointer {context.Pointer}"
-                | None ->
-                    Error $"Failed to decode opcode {memory[context.Pointer]} at pointer {context.Pointer}"
+                | None -> Error $"Failed to decode opcode {memory[context.Pointer]} at pointer {context.Pointer}"
 
             executeNext ()

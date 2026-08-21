@@ -14,7 +14,7 @@ module Day05 =
         processor.RegisterHandler 3 inputHandler
         processor.RegisterHandler 4 outputHandler
 
-        processor.Run(Queue [ 1 ])
+        processor.Execute(Queue [ 1 ])
 
     let solvePart02 (input: string) =
         let intCode = input.Split "," |> Array.map int
@@ -29,4 +29,4 @@ module Day05 =
         processor.RegisterHandler 7 lessThanHandler
         processor.RegisterHandler 8 equalToHandler
 
-        processor.Run(Queue [ 5 ])
+        processor.Execute(Queue [ 5 ])

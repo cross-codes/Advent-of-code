@@ -16,11 +16,15 @@
     <Compile Include="Solutions/Day04.fs"></Compile>
     <Compile Include="Solutions/Day05.fs"></Compile>
     <Compile Include="Solutions/Day06.fs"></Compile>
+    <Compile Include="Solutions/Day07.fs"></Compile>
     <Compile Include="Program.fs"></Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Inputs/*.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Combinatorics" Version="2.0.0" />
   </ItemGroup>
 </Project>
