@@ -6,7 +6,7 @@ let time (label: string) (f: unit -> unit) =
     let sw = Stopwatch.StartNew()
     f ()
     sw.Stop()
-    printfn $"{label} took {sw.ElapsedMilliseconds}ms"
+    printfn $"[TIME] {label} took {sw.ElapsedMilliseconds}ms"
 
 let day01 () =
     let input = FileReader.readLines 1
@@ -64,6 +64,7 @@ let main args =
     | [| dayArg |] when dayArg = "all" ->
         for name, f in days do
             time name f
+            printfn "-----------------------"
 
         0
 
