@@ -17,7 +17,10 @@ module Handlers =
             let p2 = context.Memory[context.Pointer + 2]
             let a = interpretParameter context instruction.Modes[0] p1
             let b = interpretParameter context instruction.Modes[1] p2
-            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+
+            let addr =
+                getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+
             context.Memory[int addr] <- a + b
             context.Pointer <- context.Pointer + 4
             Continue
@@ -28,7 +31,10 @@ module Handlers =
             let p2 = context.Memory[context.Pointer + 2]
             let a = interpretParameter context instruction.Modes[0] p1
             let b = interpretParameter context instruction.Modes[1] p2
-            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+
+            let addr =
+                getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+
             context.Memory[int addr] <- a * b
             context.Pointer <- context.Pointer + 4
             Continue
@@ -90,7 +96,9 @@ module Handlers =
             let p2 = context.Memory[context.Pointer + 2]
             let val1 = interpretParameter context instruction.Modes[0] p1
             let val2 = interpretParameter context instruction.Modes[1] p2
-            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+
+            let addr =
+                getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
 
             if val1 < val2 then
                 context.Memory[int addr] <- 1
@@ -106,7 +114,9 @@ module Handlers =
             let p2 = context.Memory[context.Pointer + 2]
             let val1 = interpretParameter context instruction.Modes[0] p1
             let val2 = interpretParameter context instruction.Modes[1] p2
-            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+
+            let addr =
+                getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
 
             if val1 = val2 then
                 context.Memory[int addr] <- 1
