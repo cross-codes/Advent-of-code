@@ -6,7 +6,7 @@ open Shared.IntcodeComputer.Processor
 
 module Day02 =
     let public solvePart01 (input: string) =
-        let intCode = input.Split "," |> Array.map int
+        let intCode = input.Split "," |> Array.map int64
         let processor = Processor intCode
         processor.RegisterHandler 1 additionHandler
         processor.RegisterHandler 2 multiplyHandler
@@ -15,11 +15,11 @@ module Day02 =
         processor.ModifyAt 1 12
         processor.ModifyAt 2 2
 
-        processor.Execute(Queue<int>())
+        processor.Execute(Queue<int64>())
 
 
     let public solvePart02 (input: string) =
-        let intCode = input.Split "," |> Array.map int
+        let intCode = input.Split "," |> Array.map int64
 
         let resPair =
             Seq.allPairs (seq { 0..99 }) (seq { 0..99 })
@@ -31,7 +31,7 @@ module Day02 =
                 processor.ModifyAt 1 i
                 processor.ModifyAt 2 j
 
-                match processor.Execute(Queue<int>()) with
+                match processor.Execute(Queue<int64>()) with
                 | Ok(_, memory, _, _) -> memory[0] = 19690720
                 | Error _ -> false)
 

@@ -9,16 +9,16 @@ module Handlers =
         | OutputProduced
         | Halted
 
-    type public Handler = Context -> Instruction -> HandlerResult // true to keep running, false else * true if output
+    type public Handler = Context -> Instruction -> HandlerResult
 
     let public additionHandler: Handler =
         fun context instruction ->
             let p1 = context.Memory[context.Pointer + 1]
             let p2 = context.Memory[context.Pointer + 2]
-            let addr = context.Memory[context.Pointer + 3]
             let a = interpretParameter context instruction.Modes[0] p1
             let b = interpretParameter context instruction.Modes[1] p2
-            context.Memory[addr] <- a + b
+            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+            context.Memory[int addr] <- a + b
             context.Pointer <- context.Pointer + 4
             Continue
 
@@ -26,23 +26,24 @@ module Handlers =
         fun context instruction ->
             let p1 = context.Memory[context.Pointer + 1]
             let p2 = context.Memory[context.Pointer + 2]
-            let addr = context.Memory[context.Pointer + 3]
             let a = interpretParameter context instruction.Modes[0] p1
             let b = interpretParameter context instruction.Modes[1] p2
-            context.Memory[addr] <- a * b
+            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
+            context.Memory[int addr] <- a * b
             context.Pointer <- context.Pointer + 4
             Continue
 
     let public haltHandler: Handler = fun _ctx _instr -> Halted
 
     let public inputHandler: Handler =
-        fun context _instruction ->
-            let addr = context.Memory[context.Pointer + 1]
+        fun context instruction ->
+            let p1 = context.Memory[context.Pointer + 1]
+            let addr = getWriteAddress context instruction.Modes[0] p1
 
             if context.InputQueue.Count = 0 then
                 failwith $"No input provided"
             else
-                context.Memory[addr] <- context.InputQueue.Dequeue()
+                context.Memory[int addr] <- context.InputQueue.Dequeue()
 
             context.Pointer <- context.Pointer + 2
             Continue
@@ -60,10 +61,10 @@ module Handlers =
             let p1 = context.Memory[context.Pointer + 1]
             let setPointer = interpretParameter context instruction.Modes[0] p1
 
-            if setPointer <> 0 then
+            if setPointer <> 0L then
                 let p2 = context.Memory[context.Pointer + 2]
                 let newPosition = interpretParameter context instruction.Modes[1] p2
-                context.Pointer <- newPosition
+                context.Pointer <- int newPosition
             else
                 context.Pointer <- context.Pointer + 3
 
@@ -77,7 +78,7 @@ module Handlers =
             if setPointer = 0 then
                 let p2 = context.Memory[context.Pointer + 2]
                 let newPosition = interpretParameter context instruction.Modes[1] p2
-                context.Pointer <- newPosition
+                context.Pointer <- int newPosition
             else
                 context.Pointer <- context.Pointer + 3
 
@@ -87,14 +88,14 @@ module Handlers =
         fun context instruction ->
             let p1 = context.Memory[context.Pointer + 1]
             let p2 = context.Memory[context.Pointer + 2]
-            let addr = context.Memory[context.Pointer + 3]
             let val1 = interpretParameter context instruction.Modes[0] p1
             let val2 = interpretParameter context instruction.Modes[1] p2
+            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
 
             if val1 < val2 then
-                context.Memory[addr] <- 1
+                context.Memory[int addr] <- 1
             else
-                context.Memory[addr] <- 0
+                context.Memory[int addr] <- 0
 
             context.Pointer <- context.Pointer + 4
             Continue
@@ -103,14 +104,22 @@ module Handlers =
         fun context instruction ->
             let p1 = context.Memory[context.Pointer + 1]
             let p2 = context.Memory[context.Pointer + 2]
-            let addr = context.Memory[context.Pointer + 3]
             let val1 = interpretParameter context instruction.Modes[0] p1
             let val2 = interpretParameter context instruction.Modes[1] p2
+            let addr = getWriteAddress context instruction.Modes[2] context.Memory[context.Pointer + 3]
 
             if val1 = val2 then
-                context.Memory[addr] <- 1
+                context.Memory[int addr] <- 1
             else
-                context.Memory[addr] <- 0
+                context.Memory[int addr] <- 0
 
             context.Pointer <- context.Pointer + 4
+            Continue
+
+    let public relativeOffSetIncrementHandler: Handler =
+        fun context instruction ->
+            let p1 = context.Memory[context.Pointer + 1]
+            let val1 = interpretParameter context instruction.Modes[0] p1
+            context.CurrentRelativeBase <- context.CurrentRelativeBase + val1
+            context.Pointer <- context.Pointer + 2
             Continue

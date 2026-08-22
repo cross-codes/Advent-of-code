@@ -11,8 +11,10 @@ module Processor =
         | Paused
         | Terminated
 
-    type public Processor(initialOpcodes: int array) =
-        let memory = Array.copy initialOpcodes
+    type public Processor(initialOpcodes: int64 array) =
+        let memory = Array.zeroCreate<int64> 1_000_000
+        do Array.blit initialOpcodes 0 memory 0 initialOpcodes.Length
+
         let mutable handlers: Map<int, Handler> = Map.empty
 
         member _.RegisterHandler opcode handler =
@@ -20,7 +22,7 @@ module Processor =
 
         member _.ModifyAt index value = memory.[index] <- value
 
-        member this.Execute(additionalInput: Queue<int>, ?existingContext: Context, ?pauseOnOutput: bool) =
+        member this.Execute(additionalInput: Queue<int64>, ?existingContext: Context, ?pauseOnOutput: bool) =
             let context =
                 match existingContext with
                 | Some ctx ->
@@ -29,8 +31,9 @@ module Processor =
                 | None ->
                     { Memory = memory
                       Pointer = 0
+                      CurrentRelativeBase = 0
                       InputQueue = additionalInput
-                      Outputs = List<int>() }
+                      Outputs = List<int64>() }
 
             let pauseOnOutput = defaultArg pauseOnOutput false
 

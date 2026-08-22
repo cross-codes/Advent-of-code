@@ -18,6 +18,7 @@
     <Compile Include="Solutions/Day06.fs"></Compile>
     <Compile Include="Solutions/Day07.fs"></Compile>
     <Compile Include="Solutions/Day08.fs"></Compile>
+    <Compile Include="Solutions/Day09.fs"></Compile>
     <Compile Include="Program.fs"></Compile>
   </ItemGroup>
   <ItemGroup>

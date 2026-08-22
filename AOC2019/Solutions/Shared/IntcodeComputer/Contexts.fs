@@ -5,12 +5,20 @@ open ParameterMode
 
 module Contexts =
     type public Context =
-        { Memory: int array
+        { Memory: int64 array
           mutable Pointer: int
-          InputQueue: Queue<int>
-          Outputs: List<int> }
+          mutable CurrentRelativeBase: int64
+          InputQueue: Queue<int64>
+          Outputs: List<int64> }
 
-    let public interpretParameter context mode rawParameter =
+    let public interpretParameter context mode (rawParameter: int64) =
         match mode with
-        | Position -> context.Memory[rawParameter]
+        | Position -> context.Memory[int rawParameter]
         | Immediate -> rawParameter
+        | Relative -> context.Memory[int (context.CurrentRelativeBase + rawParameter)]
+
+    let public getWriteAddress context mode (rawParameter: int64) =
+        match mode with
+        | Position -> int rawParameter
+        | Relative -> int (context.CurrentRelativeBase + rawParameter)
+        | Immediate -> failwith "Write parameters cannot be in immediate mode"

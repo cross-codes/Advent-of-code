@@ -48,6 +48,11 @@ let day08 () =
     input |> Day08.solvePart01 |> printfn "Part 1: %A"
     input |> Day08.solvePart02 |> printfn "Part 2: %A"
 
+let day09 () =
+    let input = FileReader.readText 9
+    input |> Day09.solvePart01 |> printfn "Part 1: %A"
+    input |> Day09.solvePart02 |> printfn "Part 2: %A"
+
 let days =
     [ "day01", day01
       "day02", day02
@@ -56,7 +61,8 @@ let days =
       "day05", day05
       "day06", day06
       "day07", day07
-      "day08", day08 ]
+      "day08", day08
+      "day09", day09 ]
 
 [<EntryPoint>]
 let main args =
